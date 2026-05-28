@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de Atividades</title>
+
+    <style>
+
+        body{
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1{
+            color: #333;
+        }
+
+        .topo{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn{
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+        }
+
+        .novo{
+            background-color: #3498db;
+        }
+
+        .editar{
+            background-color: #f39c12;
+        }
+
+        .excluir{
+            background-color: #e74c3c;
+        }
+
+
+        table{
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td{
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th{
+            background-color: #34495e;
+            color: white;
+        }
+
+        tr:hover{
+            background-color: #f2f2f2;
+        }
+
+        .status{
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .INICIADO{
+            background-color: #95a5a6;
+        }
+
+        .EM_ANDAMENTO{
+            background-color: #f1c40f;
+            color: black;
+        }
+
+        .CONCLUIDO{
+            background-color: #2ecc71;
+        }
+
+        img{
+            border-radius: 8px;
+            object-fit: cover;
+        }
+		
+		.imagem-preview{
+		    cursor: pointer;
+		    transition: 0.3s;
+		}
+
+		.imagem-preview:hover{
+		    transform: scale(1.05);
+		}
+
+		.modal{
+		    display: none;
+		    position: fixed;
+		    z-index: 999;
+		    left: 0;
+		    top: 0;
+		    width: 100%;
+		    height: 100%;
+		    background-color: rgba(0,0,0,0.8);
+
+		    justify-content: center;
+		    align-items: center;
+		}
+
+		.modal img{
+		    max-width: 90%;
+		    max-height: 90%;
+		    border-radius: 12px;
+		}
+
+    </style>
+
+</head>
+<body>
+
+<div class="topo">
+
+    <h1>Controle de Atividades</h1>
+
+    <div>
+
+        <a th:href="@{/nova}" class="btn novo">
+            Nova Atividade
+        </a>
+
+     
+
+    </div>
+
+</div>
+
+<table>
+
+    <thead>
+
+    <tr>
+        <th>ID</th>
+        <th>Nome</th>
+		<th>Início</th>
+		<th>Conclusão</th>
+        <th>Status</th>
+        <th>Imagem</th>
+        <th>Ações</th>
+    </tr>
+
+    </thead>
+
+    <tbody>
+
+		<tr th:each="a : ${atividades}">
+
+		    <td th:text="${a.id}"></td>
+
+		    <td th:text="${a.nome}"></td>
+
+		    <td th:text="${a.dataInicio}"></td>
+
+		    <td th:text="${a.dataConclusao}"></td>
+
+		    <td>
+		        <span
+		                class="status"
+		                th:classappend="${a.status}"
+		                th:text="${a.status}">
+		        </span>
+		    </td>
+
+			<td>
+
+			    <img
+			            th:if="${a.imagem != null}"
+			            th:src="@{/imagem/{id}(id=${a.id})}"
+			            width="120"
+			            class="imagem-preview"
+			            onclick="abrirImagem(this.src)">
+
+			    <span th:if="${a.imagem == null}">
+			        Sem imagem
+			    </span>
+
+			</td>
+
+		    <td>
+
+		        <a
+		                th:href="@{/editar/{id}(id=${a.id})}"
+		                class="btn editar">
+		            Editar
+		        </a>
+
+		        <a
+		                th:href="@{/excluir/{id}(id=${a.id})}"
+		                class="btn excluir"
+		                onclick="return confirm('Deseja excluir esta atividade?')">
+		            Excluir
+		        </a>
+
+		    </td>
+
+		</tr>
+    </tbody>
+
+</table>
+<div id="modalImagem" class="modal" onclick="fecharImagem()">
+
+    <img id="imagemExpandida">
+
+</div>
+
+<script>
+
+    function abrirImagem(src){
+
+        document.getElementById("modalImagem").style.display = "flex";
+
+        document.getElementById("imagemExpandida").src = src;
+    }
+
+    function fecharImagem(){
+
+        document.getElementById("modalImagem").style.display = "none";
+    }
+
+</script>
+</body>
+</html>

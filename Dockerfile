@@ -1,11 +1,11 @@
-# Etapa 1: Build da aplicação usando Maven e Java 17
-FROM maven:3.8.5-openjdk-21 AS build
+# Etapa 1: Build da aplicação usando Maven e Java 21 (Temurin)
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Etapa 2: Execução da aplicação
-FROM openjdk:21-jdk-slim
+# Etapa 2: Execução da aplicação com o JRE do Java 21 (leve e otimizado)
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
